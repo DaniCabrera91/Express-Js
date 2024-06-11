@@ -17,33 +17,33 @@ app.get('/Productos', (req, res) => {
 app.use(express.json())
 
 app.post('/Productos', (req, res) => {
- res.send(`crear un producto ${req.body.name}`)
+ res.status(200).send(`crear un producto ${req.body.name}`)
 })
 
 app.put('/Productos', (req, res) => {
-    res.send(`actualizar un producto ${req.body.name}`);
+    res.status(200).send(`actualizar un producto ${req.body.name}`);
 })
 
 app.delete('/Productos', (req, res) => {
-    res.send('borrar un producto');
+    res.status(200).send('borrar un producto');
 })
 
 
 
 app.get('/Usuarios', (req, res) => {
-    res.send('listado de usuarios')
+    res.status(200).send('listado de usuarios')
 })
 
 app.use(express.json())
 
 app.post('/Usuarios', (req, res) => {
- res.send(`crear un usuario ${req.body.name}`)
+ res.status(200).send(`crear un usuario ${req.body.name}`)
 })
 
 app.put('/Usuarios', (req, res) => {
-    res.send(`actualizar un usuario ${req.body.name}`);
+    res.status(200).send(`actualizar un usuario ${req.body.name}`);
 })
 
-app.delete('/Usuarios', (req, res) => {
+app.status(200).delete('/Usuarios', (req, res) => {
     res.send('borrar un usuario');
 })
