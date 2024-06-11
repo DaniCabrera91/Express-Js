@@ -1,0 +1,17 @@
+{
+  "name": "e3",
+  "version": "1.0.0",
+  "main": "ej3.js",
+  "scripts": {
+    "start": "nodemon ej3.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.3"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
