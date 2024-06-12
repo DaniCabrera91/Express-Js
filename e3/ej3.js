@@ -30,7 +30,6 @@ app.get('/products', (req, res) => {
 
 // Crear endpoint para poder crear un producto nuevo
 app.post('/products', (req, res) => {
-    console.log(productsItems);
     const {nombre, precio} = req.body
     const newProduct = {
         id: productsItems.length +1,
@@ -58,7 +57,6 @@ if (filterById){
         }
     })
 }else {
-
 res.status(400).send({message: 'Error: No encontramos el producto'})
 }    
 })
@@ -67,26 +65,63 @@ res.status(400).send({message: 'Error: No encontramos el producto'})
 app.delete('/products/id/:id', (req, res) => {
     const productId = parseInt(req.params.id, 10);
     const deleteById = productsItems.some(item => item.id === +req.params.id)
-    
+
     if (deleteById) {
         const deleteItem = productsItems.filter((item) => item.id === productId)
         res.status(200).send(deleteItem)
     } else { 
         res.status(400).send({message: 'El producto que se quiere eliminar no existe'})
     }
-})
+}) 
 
 // Crear filtro por precio de producto
-app.get('/products/filter/price', (req, res) => {
-    const { min, max } = req.query;
-    const filteredProducts = products.filter(
-      product => product.precio >= parseInt(min) && product.precio <= parseInt(max)
-    );
-    res.json({ description: 'Productos filtrados por precio', items: filteredProducts });
-  });
+  app.get('/products/filter/precio/:precio', (req, res) => {
+    if (req.params.precio) {
+      const selectByPrice = productos.items.filter(product => product.precio === +req.params.precio)
+      res.status(200).json({ description: 'Productos filtrados por precio', item: selectByPrice});  
+    } else {
+      res.status(400).json({ message: 'No existe ningun producto con ese parámetro' });
+    }
+  })
 
 // Crear filtro que muestre los productos con un precio entre 50 y 250.
+app.get('/products/filter/precio/rango/:min/:max', (req, res) => {
+    const { min, max } = req.params;
+  
+    const minPrice = parseInt(min);
+    const maxPrice = parseInt(max);
+
+    const filteredProducts = productsItems.filter(
+      (product) => product.precio >= minPrice && product.precio <= maxPrice
+    );
+  
+    if (filteredProducts.length > 0) {
+      res.status(200).json({ description: 'Productos filtrados por rango de precio:', items: filteredProducts });
+    } else {
+      res.status(404).json({ message: 'Error: No hay ningún producto en este rango de precios' });
+    }
+  });
 
 // Crear un filtro que cuando busque en postman por parámetro el id de un producto me devuelva ese producto
+app.get('/products/filter/id/:id', (req, res) => {
+    const { id } = req.params;
+    const filterById = productsItems.find(item => item.id === +id);
+  
+    if (filterById) {
+      res.status(200).json({ description: 'Producto solicitado:', item: filterById});
+    } else {
+      res.status(404).json({ error: 'Error: Producto no encontrado'});
+    }
+  });
 
 // Crear un filtro que cuando busque en postman por parámetro el nombre de un producto me devuelva ese producto
+app.get('/products/filter/nombre/:nombre', (req, res) => {
+    const { nombre } = req.params;
+    const filterByName = productsItems.find(item => item.nombre.toLowerCase() === nombre.toLowerCase());
+  
+    if (filterByName) {
+      res.json({ description: 'Producto encontrado por nombre', item: filterByName });
+    } else {
+      res.status(404).json({ error: 'Producto no encontrado' });
+    }
+  });
