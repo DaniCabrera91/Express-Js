@@ -47,7 +47,7 @@ app.post('/products', (req, res) => {
 
 // Crear endpoint para poder actualizar un producto
 app.put('/products/:id', (req, res) => {
-    const productId = parseInt(req.params.id, 10); // Convierte a número
+    const productId = parseInt(req.params.id, 10);
     const filterById = productsItems.some(item => item.id === +req.params.id)
 if (filterById){
     productsItems.forEach((item) => {
@@ -59,17 +59,31 @@ if (filterById){
     })
 }else {
 
-res.status(400).send({message: 'error'})
+res.status(400).send({message: 'Error: No encontramos el producto'})
 }    
 })
 
 // Crear endpoint para poder eliminar un producto
 app.delete('/products/id/:id', (req, res) => {
-    const result = productsItems.some(item => item.id === +req.params.id)
-    res.status(200).send(result);
+    const productId = parseInt(req.params.id, 10);
+    const deleteById = productsItems.some(item => item.id === +req.params.id)
+    
+    if (deleteById) {
+        const deleteItem = productsItems.filter((item) => item.id === productId)
+        res.status(200).send(deleteItem)
+    } else { 
+        res.status(400).send({message: 'El producto que se quiere eliminar no existe'})
+    }
 })
 
 // Crear filtro por precio de producto
+app.get('/products/filter/price', (req, res) => {
+    const { min, max } = req.query;
+    const filteredProducts = products.filter(
+      product => product.precio >= parseInt(min) && product.precio <= parseInt(max)
+    );
+    res.json({ description: 'Productos filtrados por precio', items: filteredProducts });
+  });
 
 // Crear filtro que muestre los productos con un precio entre 50 y 250.
 
